@@ -1,6 +1,8 @@
 {
     "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [],
+    "extensionsToTreatAsEsm": [
+        ".js"
+    ],
     "transform": {},
     "testMatch": [
         "**/tests/**/*.test.js"

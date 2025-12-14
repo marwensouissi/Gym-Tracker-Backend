@@ -1,280 +1,440 @@
-# AI-Powered Fitness Tracker Backend
+# 🏋️ AI-Powered Fitness Tracker Backend
 
-A production-ready Express.js backend with MongoDB for fitness tracking, featuring AI-powered workout and meal suggestions using Google Gemini.
+A production-ready RESTful API for fitness tracking with AI-powered personalized recommendations using Google Gemini AI.
 
-## Features
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5.0-blue.svg)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Latest-green.svg)](https://www.mongodb.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-- ✅ **Authentication**: JWT-based auth with bcrypt password hashing
-- ✅ **Workout Logging**: Track cardio and resistance exercises with automatic calorie calculation
-- ✅ **Meal Logging**: Log meals with macro tracking and calorie estimation
-- ✅ **AI Suggestions**: Personalized workout/meal recommendations and weekly summaries via Google Gemini
-- ✅ **API Documentation**: Interactive Swagger UI
-- ✅ **Testing**: Comprehensive unit and integration tests
-- ✅ **DevOps**: Docker support and CI/CD pipeline
+## 🌟 Features
 
-## 🛡️ AI Safety & Security Features
+### Core Functionality
+- ✅ **User Authentication** - Secure JWT-based authentication with bcrypt password hashing
+- ✅ **Workout Tracking** - Log cardio and resistance workouts with automatic calorie calculation
+- ✅ **Meal Logging** - Track meals with detailed macronutrient breakdown
+- ✅ **User Health Profiles** - Comprehensive health data including age, height, weight history, medical conditions
+- ✅ **Weight History** - Automatic tracking of weight changes over time with progress analytics
 
-Our AI service implements **6 layers of protection** for production-ready safety:
+### AI-Powered Features (Google Gemini)
+- 🤖 **Personalized Workout Suggestions** - AI analyzes your profile, goals, and history
+- 🍽️ **Custom Meal Plans** - Tailored to your dietary restrictions, allergies, and fitness goals
+- 📊 **Weekly Progress Summaries** - Data-driven insights and actionable recommendations
+- 🔒 **Medical Safety** - AI considers injuries, conditions, and restrictions
 
-| Protection | Implementation |
-|------------|---------------|
-| **Token Limits** | Max 1024 output tokens to control costs |
-| **Request Timeouts** | 15-second timeout to prevent hanging |
-| **Input Sanitization** | Removes HTML, injection patterns, limits length |
-| **Rate Limiting** | 10 requests/minute per user |
-| **Output Validation** | Checks response quality and format |
-| **Safety Filters** | Gemini blocks harassment, hate, explicit, dangerous content |
+### Advanced Features
+- 🛡️ **AI Safety Layers** - Rate limiting, input sanitization, timeout protection, content filtering
+- 📈 **Smart Calorie Calculation** - MET-based for cardio, volume-based for resistance training
+- 📝 **Input Validation** - Comprehensive validation using Joi
+- 🔐 **Security** - Helmet, CORS, rate limiting, JWT tokens
+- 📚 **API Documentation** - Interactive Swagger/OpenAPI documentation
+- 🐳 **Docker Support** - Complete containerization with Docker Compose
+- 🧪 **Testing** - Unit and integration tests with Jest
+- ⚙️ **CI/CD** - GitHub Actions workflow
 
-See [AI_SECURITY.md](docs/AI_SECURITY.md) for detailed documentation.
+## 🏗️ Tech Stack
 
-## Tech Stack
+**Backend Framework:**
+- Node.js 18+
+- Express 5
+- ES Modules
 
-- **Node.js 18+** with ES Modules
-- **Express.js 5** - Web framework
-- **MongoDB** with Mongoose ODM
-- **JWT** for authentication
-- **Google Gemini AI** for suggestions
-- **Jest** for testing
-- **Docker** for containerization
-- **Swagger/OpenAPI** for documentation
+**Database:**
+- MongoDB
+- Mongoose ODM
 
-## Prerequisites
+**AI/ML:**
+- Google Gemini 1.5 Flash
+- Custom prompt engineering
 
+**Security:**
+- JWT (jsonwebtoken)
+- bcryptjs
+- Helmet
+- CORS
+
+**Validation:**
+- Joi
+
+**Testing:**
+- Jest
+- Supertest
+
+**DevOps:**
+- Docker & Docker Compose
+- GitHub Actions
+- Nodemon
+
+**Documentation:**
+- Swagger UI Express
+- OpenAPI 3.0
+
+## 📦 Installation
+
+### Prerequisites
 - Node.js 18 or higher
 - MongoDB (local or Atlas)
-- Google Gemini API key ([Get one here](https://ai.google.dev/))
+- Google Gemini API key ([Get free key](https://ai.google.dev/))
 
-## Environment Variables
+### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/ai-fitness-tracker-backend.git
+cd ai-fitness-tracker-backend
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
+
+# Start MongoDB (if running locally)
+# mongod
+
+# Seed demo data (optional)
+npm run seed
+
+# Start development server
+npm run dev
+```
+
+Server will be running at `http://localhost:3000`
+
+### Docker Quick Start
+
+```bash
+# Start everything with Docker Compose
+docker-compose up --build
+
+# Seed data (in another terminal)
+npm run seed
+```
+
+## 🔧 Environment Variables
 
 Create a `.env` file in the root directory:
 
 ```env
+# Server
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/fitness-tracker
-JWT_SECRET=your_super_secret_jwt_key
-GEMINI_API_KEY=your_google_gemini_api_key
 NODE_ENV=development
+
+# Database
+MONGO_URI=mongodb://localhost:27017/fitness-tracker
+
+# Authentication
+JWT_SECRET=your_super_secret_jwt_key_change_in_production
+
+# AI Service
+GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
 
-See `.env.example` for reference.
+⚠️ **Important:** Never commit `.env` file to version control!
 
-## Installation
+## 📚 API Documentation
 
-### Local Development
+### Interactive Documentation
+Visit `http://localhost:3000/api-docs` for interactive Swagger UI documentation.
 
+### Quick Reference
+
+#### Authentication
 ```bash
-# Install dependencies
-npm install
-
-# Start MongoDB (if running locally)
-# mongod --dbpath /path/to/data
-
-# Run in development mode
-npm run dev
-
-# Or start normally
-npm start
+POST /api/auth/register    # Register new user
+POST /api/auth/login       # Login and get JWT token
+GET  /api/auth/me          # Get current user info
 ```
 
-### Docker (Recommended)
-
+#### User Profile
 ```bash
-# Build and start all services
-docker-compose up --build
-
-# Run in detached mode
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
+GET  /api/profile                 # Get user profile
+POST /api/profile                 # Create/update profile
+PUT  /api/profile/weight          # Update weight (saves to history)
+GET  /api/profile/weight-history  # Get weight history
 ```
 
-The app will be available at `http://localhost:3000`
+#### Workouts
+```bash
+POST /api/workouts        # Log a workout (auto-calculates calories)
+GET  /api/workouts        # Get user's workouts
+```
 
-## API Documentation
+#### Meals
+```bash
+POST /api/meals           # Log a meal (auto-calculates totals)
+GET  /api/meals           # Get user's meals
+```
 
-Once running, visit:
-- **Swagger UI**: http://localhost:3000/api-docs
-- **Health Check**: http://localhost:3000/health
+#### AI Features
+```bash
+GET /api/ai/workout-suggestion  # Get personalized workout plan
+GET /api/ai/meal-suggestion     # Get personalized meal plan
+GET /api/ai/weekly-summary      # Get weekly progress analysis
+```
 
-## API Endpoints
+### Example Requests
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user (protected)
-
-### Workouts
-- `POST /api/workouts` - Log workout (protected)
-- `GET /api/workouts` - Get user workouts (protected)
-
-### Meals
-- `POST /api/meals` - Log meal (protected)
-- `GET /api/meals` - Get user meals (protected)
-
-### AI
-- `GET /api/ai/workout-suggestion` - Get AI workout suggestion (protected)
-- `GET /api/ai/meal-suggestion` - Get AI meal suggestion (protected)
-- `GET /api/ai/weekly-summary` - Get weekly summary (protected)
-
-## Example Requests
-
-### Register
+#### Register User
 ```bash
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "John Doe",
     "email": "john@example.com",
-    "password": "password123"
+    "password": "securepass123"
   }'
 ```
 
-### Login
+#### Set Up Profile
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3000/api/profile \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john@example.com",
-    "password": "password123"
+    "age": 28,
+    "gender": "male",
+    "height": 180,
+    "currentWeight": 75,
+    "targetWeight": 70,
+    "fitnessGoals": ["weight_loss", "endurance"],
+    "activityLevel": "moderately_active",
+    "experienceLevel": "intermediate",
+    "workoutFrequency": 4,
+    "dietaryRestrictions": ["vegetarian"],
+    "allergies": []
   }'
 ```
 
-### Log Workout
+#### Log Workout
 ```bash
 curl -X POST http://localhost:3000/api/workouts \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d '{
     "type": "resistance",
     "exercises": [
       {
         "name": "Bench Press",
-        "sets": 3,
-        "reps": 10,
-        "weight": 60
+        "sets": 4,
+        "reps": 8,
+        "weight": 80
       }
     ],
-    "notes": "Great session!"
+    "notes": "Felt strong today!"
   }'
 ```
 
-### Log Meal
-```bash
-curl -X POST http://localhost:3000/api/meals \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -d '{
-    "name": "Breakfast",
-    "foodItems": [
-      {
-        "name": "Oatmeal",
-        "quantity": "100g",
-        "calories": 150,
-        "protein": 5,
-        "carbs": 27,
-        "fat": 3
-      }
-    ]
-  }'
-```
-
-### Get AI Suggestion
+#### Get AI Workout Suggestion
 ```bash
 curl http://localhost:3000/api/ai/workout-suggestion \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
-## Testing
+## 🧮 Calorie Calculation Formulas
 
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-```
-
-## Project Structure
-
-```
-diet/
-├── src/
-│   ├── config/         # Environment & DB config
-│   ├── controllers/    # Request handlers
-│   ├── middleware/     # Auth, validation, error handling
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # API routes
-│   ├── services/       # Business logic (calorie, AI)
-│   ├── utils/          # Logger, helpers
-│   ├── app.js          # Express app setup
-│   └── server.js       # Entry point
-├── tests/
-│   ├── unit/           # Unit tests
-│   └── integration/    # Integration tests
-├── .github/
-│   └── workflows/      # CI/CD pipelines
-├── swagger.yaml        # API documentation
-├── Dockerfile
-├── docker-compose.yml
-└── package.json
-```
-
-## Calorie Calculations
-
-### Cardio
-Uses MET (Metabolic Equivalent of Task) formula:
+### Cardio Workouts (MET-based)
 ```
 Calories = MET × Weight(kg) × Duration(hours)
 ```
 
-MET values:
+**MET Values:**
 - Running: 9.8
 - Cycling: 7.5
 - Swimming: 8.0
 - Walking: 3.8
+- Generic cardio: 6.0
 
-### Resistance
-Volume-based estimate:
+### Resistance Workouts (Volume-based)
 ```
 Calories = (Sets × Reps × Weight) × 0.03
 ```
 
-Falls back to duration-based MET if no volume data.
+Fallback to duration-based if volume data insufficient.
 
-## AI Features
+## 🤖 AI Features Deep Dive
 
-The AI service uses Google Gemini with:
-- **Retry Logic**: 3 attempts with linear backoff
-- **Graceful Fallback**: Returns friendly message if AI unavailable
-- **Rate Limiting**: Managed via service layer
+### How It Works
 
-## CI/CD Pipeline
+1. **Profile Analysis** - AI receives your complete health profile
+2. **Pattern Recognition** - Analyzes your workout and meal history
+3. **Personalization** - Tailors suggestions to your goals, restrictions, and medical conditions
+4. **Safety First** - Considers injuries, allergies, and medical conditions
 
-GitHub Actions workflow runs on push/PR:
-1. ✅ Runs unit and integration tests
-2. ✅ Builds Docker image
-3. ✅ Validates Docker container startup
+### AI Safety Layers
 
-## Acceptance Criteria
+| Layer | Implementation |
+|-------|---------------|
+| Token Limits | Max 2000 output tokens |
+| Request Timeout | 15-second timeout |
+| Input Sanitization | HTML/injection removal |
+| Rate Limiting | 10 requests/min per user |
+| Output Validation | Quality checks |
+| Safety Filters | Gemini content filtering |
 
-- [x] Clean, modular ES module architecture
-- [x] Mongoose models with password hashing
-- [x] Calorie calculations (MET + volume-based)
-- [x] AI service with retry/backoff and graceful fallback
-- [x] JWT authentication with protected routes
-- [x] Input validation (Joi)
-- [x] CORS, Helmet, logging (Morgan)
-- [x] Swagger/OpenAPI documentation
-- [x] Unit tests for calorie service
-- [x] Integration tests for full user flow
-- [x] Docker + docker-compose setup
-- [x] GitHub Actions CI pipeline
-- [x] Comprehensive README
+### What AI Considers
 
-## License
+**For Workouts:**
+- Your age, gender, weight, BMI
+- Medical conditions & injuries
+- Experience level
+- Fitness goals
+- Recent workout patterns
+- Workout frequency
 
-ISC
+**For Meals:**
+- Dietary restrictions (vegetarian, vegan, etc.)
+- Allergies
+- Activity level
+- Calorie targets
+- Macronutrient needs
+- Weight goals
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+# All tests
+npm test
+
+# Unit tests only
+npm test tests/unit
+
+# Integration tests only
+npm test tests/integration
+
+# Watch mode
+npm run test:watch
+```
+
+### Test Coverage
+- ✅ Unit tests for calorie calculation
+- ✅ Integration tests for complete user flow
+- ✅ Auth middleware tests
+- ✅ API endpoint tests
+
+## 🐳 Docker Deployment
+
+### Development
+```bash
+docker-compose up --build
+```
+
+### Production Build
+```bash
+# Build image
+docker build -t fitness-tracker-api .
+
+# Run container
+docker run -p 3000:3000 --env-file .env fitness-tracker-api
+```
+
+## 📂 Project Structure
+
+```
+fitness-tracker-backend/
+├── src/
+│   ├── config/          # Configuration files
+│   │   ├── db.js        # MongoDB connection
+│   │   └── env.js       # Environment variables
+│   ├── controllers/     # Route controllers
+│   │   ├── authController.js
+│   │   ├── workoutController.js
+│   │   ├── mealController.js
+│   │   ├── profileController.js
+│   │   └── aiController.js
+│   ├── middleware/      # Custom middleware
+│   │   ├── authMiddleware.js
+│   │   └── aiRateLimiter.js
+│   ├── models/          # Mongoose models
+│   │   ├── User.js
+│   │   ├── Workout.js
+│   │   ├── Meal.js
+│   │   └── UserProfile.js
+│   ├── routes/          # API routes
+│   │   ├── authRoutes.js
+│   │   ├── workoutRoutes.js
+│   │   ├── mealRoutes.js
+│   │   ├── profileRoutes.js
+│   │   └── aiRoutes.js
+│   ├── services/        # Business logic
+│   │   ├── aiService.js
+│   │   └── calorieService.js
+│   ├── utils/           # Utility functions
+│   │   └── logger.js
+│   ├── app.js           # Express app setup
+│   └── server.js        # Entry point
+├── tests/
+│   ├── unit/            # Unit tests
+│   └── integration/     # Integration tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml       # GitHub Actions CI
+├── docs/                # Additional documentation
+├── .env.example         # Environment template
+├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+├── swagger.yaml         # OpenAPI specification
+├── seed.js              # Database seeder
+└── README.md
+```
+
+## 🚀 Deployment
+
+### Recommended Platforms
+- **Backend**: Railway, Render, Heroku, AWS EC2
+- **Database**: MongoDB Atlas (free tier available)
+- **CI/CD**: GitHub Actions (included)
+
+### Environment Setup
+1. Set all environment variables on your platform
+2. Ensure MongoDB connection string is correct
+3. Add Gemini API key
+4. Deploy!
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Code Style
+- Use ES Modules
+- Follow existing code structure
+- Write tests for new features
+- Update documentation
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
+
+## 🙏 Acknowledgments
+
+- Google Gemini AI for intelligent recommendations
+- MongoDB for flexible data storage
+- Express.js community
+- All contributors
+
+## 📞 Support
+
+If you have any questions or issues, please:
+- Open an issue on GitHub
+- Check the [documentation](docs/)
+- Review the API guide at `/api-docs`
+
+---
+
+**Built with ❤️ using Node.js, Express, MongoDB, and Google Gemini AI**
