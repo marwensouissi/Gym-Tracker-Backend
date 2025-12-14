@@ -1,0 +1,240 @@
+openapi: 3.0.0
+info:
+  title: AI-Powered Fitness Tracker API
+  description: Backend API for fitness tracking with AI-powered suggestions
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        token:
+          type: string
+    Workout:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        type:
+          type: string
+          enum: [cardio, resistance]
+        exercises:
+          type: array
+        caloriesBurned:
+          type: number
+        date:
+          type: string
+          format: date-time
+    Meal:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        name:
+          type: string
+        foodItems:
+          type: array
+        totalCalories:
+          type: number
+        date:
+          type: string
+          format: date-time
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /api/auth/register:
+    post:
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/auth/me:
+    get:
+      summary: Get current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User data
+  /api/workouts:
+    post:
+      summary: Log a workout
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum: [cardio, resistance]
+                exercises:
+                  type: array
+                duration:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Workout created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+    get:
+      summary: Get user workouts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of workouts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workout'
+  /api/meals:
+    post:
+      summary: Log a meal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - foodItems
+              properties:
+                name:
+                  type: string
+                foodItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: string
+                      calories:
+                        type: number
+      responses:
+        '201':
+          description: Meal created
+    get:
+      summary: Get user meals
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of meals
+  /api/ai/workout-suggestion:
+    get:
+      summary: Get AI workout suggestion
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Workout suggestion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  suggestion:
+                    type: string
+  /api/ai/meal-suggestion:
+    get:
+      summary: Get AI meal suggestion
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Meal suggestion
+  /api/ai/weekly-summary:
+    get:
+      summary: Get weekly summary
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Weekly summary
