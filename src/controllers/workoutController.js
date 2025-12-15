@@ -14,7 +14,7 @@ export const createWorkout = async (req, res) => {
             duration: Joi.number(),
             distance: Joi.number()
         })),
-        duration: Joi.number().min(1), // for cardio or fallback
+        duration: Joi.number().min(0), // optional for resistance, required for cardio
         notes: Joi.string()
     });
 

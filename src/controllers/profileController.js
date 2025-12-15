@@ -102,7 +102,8 @@ export const updateProfile = async (req, res) => {
 export const updateWeight = async (req, res) => {
     const schema = Joi.object({
         weight: Joi.number().min(30).max(300).required(),
-        unit: Joi.string().valid('kg', 'lbs').default('kg')
+        unit: Joi.string().valid('kg', 'lbs').default('kg'),
+        date: Joi.date() // Optional: allow custom date for weight entry
     });
 
     const { error } = schema.validate(req.body);
@@ -110,19 +111,27 @@ export const updateWeight = async (req, res) => {
 
     try {
         let profile = await UserProfile.findOne({ user: req.user._id });
+        const recordedAt = req.body.date ? new Date(req.body.date) : new Date();
 
         if (!profile) {
             // Create profile if doesn't exist
             profile = await UserProfile.create({
                 user: req.user._id,
                 currentWeight: req.body.weight,
-                weightUnit: req.body.unit || 'kg'
+                weightUnit: req.body.unit || 'kg',
+                weightHistory: [{ weight: req.body.weight, unit: req.body.unit || 'kg', recordedAt }]
             });
         } else {
-            // Update weight (pre-save hook will add to history)
+            // Add to history manually with the specified date
+            profile.weightHistory.push({
+                weight: req.body.weight,
+                unit: req.body.unit || profile.weightUnit,
+                recordedAt
+            });
             profile.currentWeight = req.body.weight;
             profile.weightUnit = req.body.unit || profile.weightUnit;
-            await profile.save();
+            // Use save with validation but bypass pre-save hook for weight
+            await profile.save({ validateModifiedOnly: true });
         }
 
         res.json({

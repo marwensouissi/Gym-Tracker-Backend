@@ -309,11 +309,14 @@ User request: ${userInstruction}`;
 /**
  * Generates a weekly summary and actionable tip.
  */
-export const generateWeeklySummary = async (workouts, meals, userProfile = {}) => {
+export const generateWeeklySummary = async (workouts, meals, userProfile = {}, userRequest = '') => {
     const safeWorkouts = sanitizeInput(JSON.stringify(workouts.slice(0, 10)), 1500);
     const safeMeals = sanitizeInput(JSON.stringify(meals.slice(0, 10)), 1500);
     const health = userProfile.health || {};
     const stats = userProfile.stats || {};
+
+    // Sanitize user request
+    const userInstruction = sanitizeInput(userRequest, 300) || 'Provide a comprehensive weekly review.';
 
     const prompt = `You are an experienced fitness coach conducting a weekly review.
 
@@ -330,30 +333,17 @@ Workouts: ${safeWorkouts}
 Meals: ${safeMeals}
 
 **ANALYSIS REQUIRED:**
-Provide a comprehensive weekly review including:
+${userInstruction}
 
-1. **Workout Performance:**
-   - Total sessions this week
-   - Calories burned
-   - Workout type distribution
-   - Consistency vs. target frequency (${health.workoutFrequency || 3}x/week)
+If the user request is generic, provide the following:
+1. **Workout Performance** (Sessions, Calories, Type distribution)
+2. **Nutrition Analysis** (Meals logged, Avg calories, Goal alignment)
+3. **Progress Assessment** (Target weight movement, BMI trend)
+4. **Next Week Recommendation** (Actionable change)
 
-2. **Nutrition Analysis:**
-   - Meals logged vs. target
-   - Average daily calories
-   - Alignment with goals (${health.fitnessGoals?.join('/') || 'general fitness'})
+{{ ... }}
 
-3. **Progress Assessment:**
-   - Movement toward target weight (${health.targetWeight ? health.targetWeight + health.weightUnit : 'N/A'})
-   - BMI trend
-   - Overall health trajectory
-
-4. **Next Week Recommendation:**
-   - ONE specific, actionable change
-   - Adjusted workout frequency or intensity
-   - Calorie adjustment if needed
-
-Format (max 350 words): Use bullet points for clarity. Be specific with numbers.`;
+Format (max 400 words): Use Markdown.`;
 
     return await robustCall(prompt);
 };

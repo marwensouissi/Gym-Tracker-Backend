@@ -73,6 +73,7 @@ const buildUserProfile = async (user, includeStats = true) => {
 
 export const getWorkoutSuggestion = async (req, res) => {
     try {
+        const { prompt } = req.body;
         // Build comprehensive user profile
         const userProfile = await buildUserProfile(req.user, true);
 
@@ -81,7 +82,7 @@ export const getWorkoutSuggestion = async (req, res) => {
             .sort({ date: -1 })
             .limit(5);
 
-        const suggestion = await generateWorkoutSuggestion(userProfile, lastWorkouts);
+        const suggestion = await generateWorkoutSuggestion(userProfile, lastWorkouts, prompt);
         res.json({ suggestion });
     } catch (error) {
         console.error('Error generating workout suggestion:', error);
@@ -91,6 +92,7 @@ export const getWorkoutSuggestion = async (req, res) => {
 
 export const getMealSuggestion = async (req, res) => {
     try {
+        const { prompt } = req.body;
         // Build user profile with recent meal data
         const userProfile = await buildUserProfile(req.user, true);
 
@@ -121,7 +123,7 @@ export const getMealSuggestion = async (req, res) => {
         userProfile.avgDailyCalories = avgCalories;
         userProfile.activityLevel = avgCaloriesBurned > 400 ? 'high' : avgCaloriesBurned > 200 ? 'moderate' : 'low';
 
-        const suggestion = await generateMealSuggestion(userProfile, targetCalories);
+        const suggestion = await generateMealSuggestion(userProfile, targetCalories, prompt);
         res.json({ suggestion });
     } catch (error) {
         console.error('Error generating meal suggestion:', error);
@@ -131,6 +133,7 @@ export const getMealSuggestion = async (req, res) => {
 
 export const getWeeklySummary = async (req, res) => {
     try {
+        const { prompt } = req.body;
         // Get last 7 days data
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -148,7 +151,7 @@ export const getWeeklySummary = async (req, res) => {
         // Build comprehensive user profile for context
         const userProfile = await buildUserProfile(req.user, true);
 
-        const summary = await generateWeeklySummary(workouts, meals, userProfile);
+        const summary = await generateWeeklySummary(workouts, meals, userProfile, prompt);
         res.json({ summary });
     } catch (error) {
         console.error('Error generating weekly summary:', error);

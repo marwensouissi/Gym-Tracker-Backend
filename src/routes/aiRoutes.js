@@ -9,8 +9,8 @@ const router = express.Router();
 router.use(protect);
 router.use(aiRateLimiter({ maxRequests: 10, windowMs: 60000 }));
 
-router.get('/workout-suggestion', getWorkoutSuggestion);
-router.get('/meal-suggestion', getMealSuggestion);
-router.get('/weekly-summary', getWeeklySummary);
+router.post('/workout-suggestion', getWorkoutSuggestion);
+router.post('/meal-suggestion', getMealSuggestion);
+router.post('/weekly-summary', getWeeklySummary);
 
 export default router;
